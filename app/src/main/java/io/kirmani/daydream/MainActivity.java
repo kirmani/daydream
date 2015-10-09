@@ -12,12 +12,10 @@ import io.kirmani.daydream.cardboard.CardboardCamera;
 import io.kirmani.daydream.cardboard.CardboardCube;
 import io.kirmani.daydream.cardboard.CardboardFloor;
 import io.kirmani.daydream.cardboard.CardboardScene;
-import io.kirmani.daydream.http.HttpUtil;
 
 import android.os.Bundle;
 import android.util.Log;
 
-import com.google.api.client.json.JsonParser;
 import com.google.vrtoolkit.cardboard.CardboardActivity;
 import com.google.vrtoolkit.cardboard.CardboardView;
 import com.google.vrtoolkit.cardboard.Eye;
@@ -36,7 +34,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private CardboardFloor mFloor;
     private CardboardCamera mCamera;
     private CardboardScene mScene;
-    private HttpUtil mHttpUtil;
 
     /**
      * Sets the view to our CardboardView and initializes the transformation matrices we will use
@@ -57,8 +54,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         mCube = new CardboardCube(this, mScene);
         mFloor = new CardboardFloor(this, mScene);
         mCamera = new CardboardCamera(this, mScene);
-
-        mHttpUtil = new HttpUtil(this, mScene);
     }
 
     @Override
@@ -88,7 +83,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
      */
     @Override
     public void onNewFrame(HeadTransform headTransform) {
-        mHttpUtil.update();
         mCube.onNewFrame(headTransform);
         mCamera.onNewFrame(headTransform);
     }
@@ -113,7 +107,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
      */
     @Override
     public void onCardboardTrigger() {
-        mHttpUtil.post();
+        super.onCardboardTrigger();
         mCube.onCardboardTrigger();
     }
 }

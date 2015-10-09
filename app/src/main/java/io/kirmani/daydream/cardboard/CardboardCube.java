@@ -16,40 +16,52 @@ import android.opengl.GLES20;
 import android.os.Vibrator;
 import android.util.Log;
 
+import com.google.api.client.extensions.android.json.AndroidJsonFactory;
+import com.google.api.client.http.HttpContent;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.json.JsonParser;
 import com.google.vrtoolkit.cardboard.Eye;
 import com.google.vrtoolkit.cardboard.HeadTransform;
 
+import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
 
-public class CardboardCube extends CardboardObject {
+public class CardboardCube extends CardboardHttpObject {
     private static final String TAG = "CardboardCube";
 
     private static final float YAW_LIMIT = 0.12f;
     private static final float PITCH_LIMIT = 0.12f;
+    private static final float TIME_DELTA = 0.3f;
 
     private float[] mView;
     private float[] mHeadView;
 
     private FloatBuffer mFoundColors;
+    private JsonParser mUpdateJsonParser;
 
     private int mScore;
     private float objectDistance = 12f;
-    private static final float TIME_DELTA = 0.3f;
+    private BigDecimal mTriggers;
 
+    private Activity mActivity;
     private Vibrator mVibrator;
     private CardboardOverlayView mOverlayView;
+    private AndroidJsonFactory mJsonFactory;
 
     public CardboardCube(Activity activity, CardboardScene scene) {
         super(activity, scene);
+        mActivity = activity;
         setModel(new float[16]);
         mHeadView = new float[16];
         mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+        mTriggers = BigDecimal.ZERO;
 
-        mOverlayView = (CardboardOverlayView) activity.findViewById(R.id.overlay);
+        mOverlayView = (CardboardOverlayView) mActivity.findViewById(R.id.overlay);
     }
 
     @Override
@@ -116,6 +128,24 @@ public class CardboardCube extends CardboardObject {
         super.onNewFrame(headTransform);
         Matrix.rotateM(getModel(), 0, TIME_DELTA, 0.5f, 0.5f, 1.0f);
         headTransform.getHeadView(mHeadView, 0);
+    }
+
+    @Override
+    public void onUpdate(HttpResponse response) throws Exception {
+        JsonParser jsonParser =
+            (new AndroidJsonFactory()).createJsonParser(response.getContent());
+        if (jsonParser == null) { return; }
+
+        Map<String, Object> json = jsonParser.parseAndClose(Map.class);
+        Map<String, Object> result = (Map<String, Object>) json.get("result");
+        BigDecimal triggers = (BigDecimal) result.get("triggers");
+        if (triggers.compareTo(mTriggers) > 0) {
+            if (!mTriggers.equals(BigDecimal.ZERO)) {
+                mOverlayView = (CardboardOverlayView) mActivity.findViewById(R.id.overlay);
+                mOverlayView.show3DToast("Someone has clicked the screen!");
+            }
+            mTriggers = triggers;
+        }
     }
 
     @Override
