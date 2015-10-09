@@ -58,7 +58,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         mFloor = new CardboardFloor(this, mScene);
         mCamera = new CardboardCamera(this, mScene);
 
-        mHttpUtil = new HttpUtil(this);
+        mHttpUtil = new HttpUtil(this, mScene);
     }
 
     @Override

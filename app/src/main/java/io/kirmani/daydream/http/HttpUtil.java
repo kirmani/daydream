@@ -8,7 +8,9 @@
 package io.kirmani.daydream.http;
 
 import io.kirmani.daydream.R;
+import io.kirmani.daydream.cardboard.CardboardObject;
 import io.kirmani.daydream.cardboard.CardboardOverlayView;
+import io.kirmani.daydream.cardboard.CardboardScene;
 
 import android.app.Activity;
 import android.util.Log;
@@ -29,7 +31,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 
-public class HttpUtil {
+public class HttpUtil extends CardboardObject {
     private static final String TAG = "HttpUtil";
 
     private static final String HTTP_REQUEST_URL = "http://daydream.kirmani.io";
@@ -42,7 +44,8 @@ public class HttpUtil {
 
     private Activity mActivity;
 
-    public HttpUtil(Activity activity) {
+    public HttpUtil(Activity activity, CardboardScene scene) {
+        super(activity, scene);
         mActivity = activity;
         mTriggers = BigDecimal.ZERO;
         mLastUpdate = 0;
