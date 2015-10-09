@@ -38,7 +38,6 @@ public class CardboardCube extends CardboardHttpObject {
     private static final float PITCH_LIMIT = 0.12f;
     private static final float TIME_DELTA = 0.3f;
 
-    private float[] mView;
     private float[] mHeadView;
 
     private FloatBuffer mFoundColors;
@@ -56,7 +55,6 @@ public class CardboardCube extends CardboardHttpObject {
     public CardboardCube(Activity activity, CardboardScene scene) {
         super(activity, scene);
         mActivity = activity;
-        setModel(new float[16]);
         mHeadView = new float[16];
         mVibrator = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
         mTriggers = BigDecimal.ZERO;
@@ -153,9 +151,8 @@ public class CardboardCube extends CardboardHttpObject {
         super.onDrawEye(eye);
         // Build the ModelView and ModelViewProjection matrices
         // for calculating cube position and light.
-        float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
         Matrix.multiplyMM(getModelView(), 0, getView(), 0, getModel(), 0);
-        Matrix.multiplyMM(getModelViewProjection(), 0, perspective, 0, getModelView(), 0);
+        Matrix.multiplyMM(getModelViewProjection(), 0, getPerspective(), 0, getModelView(), 0);
         draw();
     }
 

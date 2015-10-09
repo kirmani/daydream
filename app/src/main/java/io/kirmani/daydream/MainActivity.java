@@ -1,4 +1,3 @@
-
 /*
  * MainActivity.java
  * Copyright (C) 2015 sean <sean@wireless-10-147-155-193.public.utexas.edu>
@@ -8,7 +7,6 @@
 
 package io.kirmani.daydream;
 
-import io.kirmani.daydream.cardboard.CardboardCamera;
 import io.kirmani.daydream.cardboard.CardboardCube;
 import io.kirmani.daydream.cardboard.CardboardFloor;
 import io.kirmani.daydream.cardboard.CardboardScene;
@@ -32,7 +30,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
     private CardboardCube mCube;
     private CardboardFloor mFloor;
-    private CardboardCamera mCamera;
     private CardboardScene mScene;
 
     /**
@@ -53,7 +50,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
 
         mCube = new CardboardCube(this, mScene);
         mFloor = new CardboardFloor(this, mScene);
-        mCamera = new CardboardCamera(this, mScene);
     }
 
     @Override
@@ -84,7 +80,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         mCube.onNewFrame(headTransform);
-        mCamera.onNewFrame(headTransform);
+        mScene.onNewFrame(headTransform);
     }
 
     /**
@@ -94,7 +90,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
      */
     @Override
     public void onDrawEye(Eye eye) {
-        mCamera.onDrawEye(eye);
+        mScene.onDrawEye(eye);
         mCube.onDrawEye(eye);
         mFloor.onDrawEye(eye);
     }

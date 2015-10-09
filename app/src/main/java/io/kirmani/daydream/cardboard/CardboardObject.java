@@ -26,8 +26,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 public class CardboardObject {
     private static final String TAG = "CardboardObject";
 
-    protected static final float Z_NEAR = 0.1f;
-    protected static final float Z_FAR = 100.0f;
     protected static final int COORDS_PER_VERTEX = 3;
 
     private final float[] mLightPosInEyeSpace = new float[4];
@@ -51,10 +49,17 @@ public class CardboardObject {
     private int mLightPosParam;
 
     private float[] mModel;
+    private float[] mView;
+    private float[] mModelView;
+    private float[] mModelViewProjection;
 
     public CardboardObject(Context context, CardboardScene scene) {
         mContext = context;
         mScene = scene;
+        mModel = new float[16];
+        mView = new float[16];
+        mModelView = new float[16];
+        mModelViewProjection = new float[16];
     }
 
     public void onRendererShutdown() {
@@ -111,15 +116,19 @@ public class CardboardObject {
     }
 
     protected float[] getModelView() {
-        return mScene.getModelView();
+        return mModelView;
     }
 
     protected float[] getModelViewProjection() {
-        return mScene.getModelViewProjection();
+        return mModelViewProjection;
     }
 
     protected float[] getView() {
         return mScene.getView();
+    }
+
+    protected float[] getPerspective() {
+        return mScene.getPerspective();
     }
 
     protected void setVertices(FloatBuffer vertices) {

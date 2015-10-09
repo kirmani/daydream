@@ -28,7 +28,6 @@ public class CardboardFloor extends CardboardObject {
 
     public CardboardFloor(Context context, CardboardScene scene) {
         super(context, scene);
-        setModel(new float[16]);
     }
 
     @Override
@@ -89,9 +88,8 @@ public class CardboardFloor extends CardboardObject {
     public void onDrawEye(Eye eye) {
         super.onDrawEye(eye);
         // Set modelView for the floor, so we draw floor in the correct location
-        float[] perspective = eye.getPerspective(Z_NEAR, Z_FAR);
         Matrix.multiplyMM(getModelView(), 0, getView(), 0, getModel(), 0);
-        Matrix.multiplyMM(getModelViewProjection(), 0, perspective, 0,
+        Matrix.multiplyMM(getModelViewProjection(), 0, getPerspective(), 0,
                 getModelView(), 0);
         draw();
     }
