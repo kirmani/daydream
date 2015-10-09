@@ -17,7 +17,10 @@ import com.google.vrtoolkit.cardboard.HeadTransform;
 import javax.microedition.khronos.egl.EGLConfig;
 
 public class CardboardCamera extends CardboardObject {
-    private static final float CAMERA_Z = 0.01f;
+    private static final float SPEED = 0.1f;
+    private float mCameraX;
+    private float mCameraY;
+    private float mCameraZ;
 
     // We keep the light always position just above the user.
     private static final float[] LIGHT_POS_IN_WORLD_SPACE = new float[] { 0.0f, 2.0f, 0.0f, 1.0f };
@@ -25,6 +28,9 @@ public class CardboardCamera extends CardboardObject {
     public CardboardCamera(Context context, CardboardScene scene) {
         super(context, scene);
         setModel(new float[16]);
+        mCameraX = 0.0f;
+        mCameraY = 0.0f;
+        mCameraZ = 0.01f;
     }
 
     @Override
@@ -36,8 +42,12 @@ public class CardboardCamera extends CardboardObject {
     @Override
     public void onNewFrame(HeadTransform headTransform) {
         super.onNewFrame(headTransform);
+
         // Build the camera matrix and apply it to the ModelView.
-        Matrix.setLookAtM(getModel(), 0, 0.0f, 0.0f, CAMERA_Z, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+        float[] forwardVector = new float[3];
+        headTransform.getForwardVector(forwardVector, 0);
+        Matrix.setLookAtM(getModel(), 0, mCameraX, mCameraY, mCameraZ, 0.0f, 0.0f, 0.0f, 0.0f,
+                1.0f, 0.0f);
     }
 
     public void onDrawEye(Eye eye) {
