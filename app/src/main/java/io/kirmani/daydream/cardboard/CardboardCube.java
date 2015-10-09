@@ -193,6 +193,7 @@ public class CardboardCube extends CardboardHttpObject {
         super.onCardboardTrigger();
         Log.i(TAG, "onCardboardTrigger");
 
+        getScene().toggleFlight();
 //         if (isLookingAtObject()) {
 //             mScore++;
 //             mOverlayView.show3DToast("Found it! Look around for another one.\nScore = " + mScore);

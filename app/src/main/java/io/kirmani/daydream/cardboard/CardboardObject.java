@@ -123,6 +123,10 @@ public class CardboardObject {
         return mModelViewProjection;
     }
 
+    protected CardboardScene getScene() {
+        return mScene;
+    }
+
     protected float[] getView() {
         return mScene.getView();
     }

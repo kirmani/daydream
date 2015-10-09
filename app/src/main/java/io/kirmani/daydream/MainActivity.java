@@ -9,6 +9,7 @@ package io.kirmani.daydream;
 
 import io.kirmani.daydream.cardboard.CardboardCube;
 import io.kirmani.daydream.cardboard.CardboardFloor;
+import io.kirmani.daydream.cardboard.CardboardLight;
 import io.kirmani.daydream.cardboard.CardboardScene;
 
 import android.os.Bundle;
@@ -28,9 +29,10 @@ import javax.microedition.khronos.egl.EGLConfig;
 public class MainActivity extends CardboardActivity implements CardboardView.StereoRenderer {
     private static final String TAG = "MainActivity";
 
+    private CardboardScene mScene;
     private CardboardCube mCube;
     private CardboardFloor mFloor;
-    private CardboardScene mScene;
+    private CardboardLight mLight;
 
     /**
      * Sets the view to our CardboardView and initializes the transformation matrices we will use
@@ -47,9 +49,9 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         setCardboardView(cardboardView);
 
         mScene = new CardboardScene();
-
         mCube = new CardboardCube(this, mScene);
         mFloor = new CardboardFloor(this, mScene);
+        mLight = new CardboardLight(this, mScene);
     }
 
     @Override
@@ -91,6 +93,7 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     @Override
     public void onDrawEye(Eye eye) {
         mScene.onDrawEye(eye);
+        mLight.onDrawEye(eye);
         mCube.onDrawEye(eye);
         mFloor.onDrawEye(eye);
     }
