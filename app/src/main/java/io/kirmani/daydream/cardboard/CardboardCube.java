@@ -147,6 +147,13 @@ public class CardboardCube extends CardboardHttpObject {
     }
 
     @Override
+    public HttpRequest sendOnUpdate() {
+        Map<String, String> json = new HashMap<>();
+        json.put("android-id", Secure.getString(getContext().getContentResolver(),
+                Secure.ANDROID_ID);
+    }
+
+    @Override
     public void onDrawEye(Eye eye) {
         super.onDrawEye(eye);
         // Build the ModelView and ModelViewProjection matrices
