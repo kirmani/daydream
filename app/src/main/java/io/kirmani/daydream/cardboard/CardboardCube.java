@@ -129,7 +129,7 @@ public class CardboardCube extends CardboardHttpObject {
     }
 
     @Override
-    public void onUpdate(HttpResponse response) throws Exception {
+    public void getOnUpdate(HttpResponse response) throws Exception {
         JsonParser jsonParser =
             (new AndroidJsonFactory()).createJsonParser(response.getContent());
         if (jsonParser == null) { return; }

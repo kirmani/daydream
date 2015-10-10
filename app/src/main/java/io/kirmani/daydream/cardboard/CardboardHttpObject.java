@@ -24,9 +24,11 @@ import com.google.vrtoolkit.cardboard.HeadTransform;
 import java.util.Arrays;
 
 public class CardboardHttpObject extends CardboardObject {
-    private static final String TAG = "HttpUtil";
+    private static final String TAG = "CardboardHttpObject";
 
-    private static final String HTTP_REQUEST_URL = "http://daydream.kirmani.io";
+    private static final String TRIGGER_REQUEST = "http://daydream.kirmani.io/trigger";
+    private static final String UPDATE_REQUEST = "http://daydream.kirmani.io/update";
+
     private static final long SECOND = 500000000;
 
     private long mLastUpdate;
@@ -42,8 +44,15 @@ public class CardboardHttpObject extends CardboardObject {
         update();
     }
 
-    protected void onUpdate(HttpResponse response) throws Exception {}
-    protected HttpContent sendContentOnTrigger() throws Exception {
+    protected void getOnUpdate(HttpResponse response) throws Exception {}
+
+    protected HttpContent sendOnUpdate() throws Exception {
+        byte[] content = new byte[300];
+        Arrays.fill(content, (byte) ' ');
+        return new ByteArrayContent(null, content);
+    }
+
+    protected HttpContent sendOnTrigger() throws Exception {
         byte[] content = new byte[300];
         Arrays.fill(content, (byte) ' ');
         return new ByteArrayContent(null, content);
@@ -53,6 +62,7 @@ public class CardboardHttpObject extends CardboardObject {
         long now = System.nanoTime();
         if (now - mLastUpdate > SECOND) {
             new DaydreamUpdateTask().execute();
+            new DaydreamSendPositionTask().execute();
             mLastUpdate = now;
         }
     }
@@ -62,7 +72,7 @@ public class CardboardHttpObject extends CardboardObject {
             try {
                 HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
                 HttpRequest request = httpTransport.createRequestFactory().buildGetRequest(
-                        new GenericUrl(HTTP_REQUEST_URL));
+                        new GenericUrl(UPDATE_REQUEST));
                 request.setRequestMethod(HttpMethods.GET);
                 HttpResponse resp = request.execute();
                 return resp;
@@ -79,20 +89,45 @@ public class CardboardHttpObject extends CardboardObject {
         protected void onPostExecute(HttpResponse response) {
             Log.i(TAG, "Executed");
             try {
-                onUpdate(response);
+                getOnUpdate(response);
             } catch (Exception e) {
                 Log.e(TAG, e.toString());
             }
         }
     }
 
+    private class DaydreamSendPositionTask extends AsyncTask<Void, Void, HttpResponse> {
+        protected HttpResponse doInBackground(Void... values) {
+            try {
+                HttpContent content = sendOnUpdate();
+                HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
+                HttpRequest request = httpTransport.createRequestFactory().buildPostRequest(
+                        new GenericUrl(UPDATE_REQUEST), content);
+                request.setRequestMethod(HttpMethods.POST);
+                HttpResponse resp = request.execute();
+                return resp;
+            } catch (Exception e) {
+                Log.e(TAG, e.toString());
+            }
+            return null;
+        }
+
+        protected void onProgressUpdate(Void... values) {
+            Log.i(TAG, "Fetching...");
+        }
+
+        protected void onPostExecute(HttpResponse response) {
+            Log.i(TAG, "Executed");
+        }
+    }
+
     private class CardboardTriggerTask extends AsyncTask<Void, Void, HttpResponse> {
         protected HttpResponse doInBackground(Void... values) {
             try {
-                HttpContent content = sendContentOnTrigger();
+                HttpContent content = sendOnTrigger();
                 HttpTransport httpTransport = AndroidHttp.newCompatibleTransport();
                 HttpRequest request = httpTransport.createRequestFactory().buildPostRequest(
-                        new GenericUrl(HTTP_REQUEST_URL), content);
+                        new GenericUrl(TRIGGER_REQUEST), content);
                 request.setRequestMethod(HttpMethods.POST);
                 HttpResponse resp = request.execute();
                 return resp;
@@ -120,6 +155,5 @@ public class CardboardHttpObject extends CardboardObject {
     private void post() {
         new CardboardTriggerTask().execute();
     }
-
 }
 
