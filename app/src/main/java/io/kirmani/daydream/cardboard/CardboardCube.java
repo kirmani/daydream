@@ -11,6 +11,7 @@ import io.kirmani.daydream.R;
 
 import android.app.Activity;
 import android.content.Context;
+import android.provider.Settings.Secure;
 import android.opengl.Matrix;
 import android.opengl.GLES20;
 import android.os.Vibrator;
@@ -19,6 +20,7 @@ import android.util.Log;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
 import com.google.api.client.http.HttpContent;
 import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.json.JsonHttpContent;
 import com.google.api.client.json.JsonParser;
 import com.google.vrtoolkit.cardboard.Eye;
 import com.google.vrtoolkit.cardboard.HeadTransform;
@@ -27,6 +29,7 @@ import java.math.BigDecimal;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -147,10 +150,11 @@ public class CardboardCube extends CardboardHttpObject {
     }
 
     @Override
-    public HttpRequest sendOnUpdate() {
-        Map<String, String> json = new HashMap<>();
+    public HttpContent sendOnUpdate() {
+        Map<String, String> json = new HashMap<String, String>();
         json.put("android-id", Secure.getString(getContext().getContentResolver(),
-                Secure.ANDROID_ID);
+                Secure.ANDROID_ID));
+        return new JsonHttpContent(new AndroidJsonFactory(), json);
     }
 
     @Override
