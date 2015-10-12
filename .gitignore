@@ -33,4 +33,7 @@ local.properties
 *~
 *.swp
 
+# Logfiles
+*.log
+
 .DS_Store
