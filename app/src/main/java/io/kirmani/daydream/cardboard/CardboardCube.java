@@ -205,13 +205,6 @@ public class CardboardCube extends CardboardHttpObject {
         Log.i(TAG, "onCardboardTrigger");
 
         getScene().toggleFlight();
-//         if (isLookingAtObject()) {
-//             mScore++;
-//             mOverlayView.show3DToast("Found it! Look around for another one.\nScore = " + mScore);
-//             hide();
-//         } else {
-//             mOverlayView.show3DToast("Look around to find the object!");
-//         }
 
         // Always give user feedback.
         mVibrator.vibrate(50);

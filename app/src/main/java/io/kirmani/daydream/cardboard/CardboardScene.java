@@ -71,6 +71,10 @@ public class CardboardScene {
         setPerspective(eye.getPerspective(0.01f, 100f));
     }
 
+    public float[] getPosition() {
+        return new float[] {mCameraX, mCameraY, mCameraZ};
+    }
+
     public void toggleFlight() {
         mIsFlying = !mIsFlying;
     }
