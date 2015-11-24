@@ -10,7 +10,6 @@ package io.kirmani.daydream;
 import io.kirmani.daydream.cardboard.CardboardCube;
 import io.kirmani.daydream.cardboard.CardboardFloor;
 import io.kirmani.daydream.cardboard.CardboardLight;
-import io.kirmani.daydream.cardboard.CardboardMenu;
 import io.kirmani.daydream.cardboard.CardboardScene;
 
 import android.os.Bundle;
@@ -34,7 +33,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     private CardboardCube mCube;
     private CardboardFloor mFloor;
     private CardboardLight mLight;
-    private CardboardMenu mMenu;
 
     /**
      * Sets the view to our CardboardView and initializes the transformation matrices we will use
@@ -54,7 +52,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         mCube = new CardboardCube(this, mScene);
         mFloor = new CardboardFloor(this, mScene);
         mLight = new CardboardLight(this, mScene);
-        mMenu = new CardboardMenu(this, mScene);
     }
 
     @Override
@@ -75,7 +72,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     public void onSurfaceCreated(EGLConfig config) {
         mCube.onSurfaceCreated(config);
         mFloor.onSurfaceCreated(config);
-        mMenu.onSurfaceCreated(config);
     }
 
     /**
@@ -87,7 +83,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
     public void onNewFrame(HeadTransform headTransform) {
         mCube.onNewFrame(headTransform);
         mScene.onNewFrame(headTransform);
-        mMenu.onNewFrame(headTransform);
     }
 
     /**
@@ -101,7 +96,6 @@ public class MainActivity extends CardboardActivity implements CardboardView.Ste
         mLight.onDrawEye(eye);
         mCube.onDrawEye(eye);
         mFloor.onDrawEye(eye);
-        mMenu.onDrawEye(eye);
     }
 
     @Override
