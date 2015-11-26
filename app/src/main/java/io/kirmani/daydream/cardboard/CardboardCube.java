@@ -258,6 +258,13 @@ public class CardboardCube extends CardboardHttpObject {
         return Math.abs(pitch) < PITCH_LIMIT && Math.abs(yaw) < YAW_LIMIT;
     }
 
+    private static float[] generateCoords(float size) {
+        float[] coords = CUBE_COORDS.clone();
+        for (int i = 0; i < coords.length; i++)
+            coords[i] *= size;
+        return coords;
+    }
+
     public static final float[] CUBE_COORDS = new float[] {
         // Front face
         -1.0f, 1.0f, 1.0f,
